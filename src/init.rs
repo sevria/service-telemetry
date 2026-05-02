@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use anyhow::Result;
 use gethostname::gethostname;
 use opentelemetry::{KeyValue, global};
@@ -5,7 +7,9 @@ use opentelemetry_otlp::MetricExporter;
 use opentelemetry_sdk::{Resource, metrics::SdkMeterProvider};
 use opentelemetry_semantic_conventions::resource::SERVICE_INSTANCE_ID;
 
-pub fn init(service_name: &str) -> Result<()> {
+use crate::{Metrics, Telemetry};
+
+pub fn init(service_name: &str) -> Result<Arc<Telemetry>> {
     let hostname = gethostname().to_string_lossy().to_string();
     let resource = Resource::builder()
         .with_service_name(service_name.to_string())
@@ -14,7 +18,11 @@ pub fn init(service_name: &str) -> Result<()> {
 
     init_meter_provider(resource)?;
 
-    Ok(())
+    let telemetry = Arc::new(Telemetry {
+        metrics: Metrics::new(),
+    });
+
+    Ok(telemetry)
 }
 
 fn init_meter_provider(resource: Resource) -> Result<SdkMeterProvider> {

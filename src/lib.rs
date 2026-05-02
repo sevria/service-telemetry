@@ -1,5 +1,11 @@
+mod init;
 mod metrics;
-mod telemetry;
+mod middleware;
 
+pub use init::init;
 pub use metrics::Metrics;
-pub use telemetry::init;
+pub use middleware::telemetry_middleware;
+
+pub struct Telemetry {
+    pub metrics: Metrics,
+}
