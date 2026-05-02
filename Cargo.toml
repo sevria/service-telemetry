@@ -1,0 +1,18 @@
+[package]
+name = "sevria-service-telemetry"
+version = "0.0.0"
+edition = "2024"
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/sevria/service-telemetry"
+homepage = "https://github.com/sevria/service-telemetry"
+description = "Plug-and-play observability for Sevria backend services using OpenTelemetry."
+
+[dependencies]
+anyhow = "1.0.102"
+gethostname = "1.1.0"
+http = "1.4.0"
+opentelemetry = "0.31.0"
+opentelemetry-otlp = { version = "0.31.1", features = ["grpc-tonic"] }
+opentelemetry-semantic-conventions = { version = "0.31.0", features = ["semconv_experimental"] }
+opentelemetry_sdk = { version = "0.31.0", features = ["rt-tokio"] }
