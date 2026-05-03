@@ -1,6 +1,14 @@
-# service-telemetry
+# sevria-service-telemetry
 
 Plug-and-play observability for Sevria backend services using OpenTelemetry.
+
+## Installation
+
+Add the crate to your project using Cargo:
+
+```bash
+cargo add sevria-service-telemetry
+```
 
 ## Configuration
 
