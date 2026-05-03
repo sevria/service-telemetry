@@ -6,7 +6,6 @@ use tokio::net::TcpListener;
 #[tokio::main]
 async fn main() -> Result<()> {
     let telemetry = sevria_service_telemetry::init("basic-http")?;
-
     let router = Router::new()
         .route("/", get(hello))
         .route("/foo", get(foo))
