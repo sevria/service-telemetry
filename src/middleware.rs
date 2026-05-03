@@ -2,7 +2,7 @@ use std::sync::Arc;
 use std::time::Instant;
 
 use axum::{
-    extract::{Request, State},
+    extract::{MatchedPath, Request, State},
     middleware::Next,
     response::Response,
 };
@@ -15,11 +15,12 @@ pub async fn telemetry_middleware(
     next: Next,
 ) -> Response {
     let method = request.method().clone();
-    let path = request.uri().clone();
-    let path = path.to_string();
+    let mut path = "".to_string();
     let started_at = Instant::now();
 
-    telemetry.metrics.before_handle(&method, &path);
+    if let Some(matched_path) = request.extensions().get::<MatchedPath>() {
+        path = matched_path.as_str().to_string();
+    }
 
     let response = next.run(request).await;
 

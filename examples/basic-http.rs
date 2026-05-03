@@ -1,5 +1,6 @@
 use anyhow::Result;
-use axum::{Router, middleware, routing::get};
+use axum::{Router, extract::Path, middleware, response::IntoResponse, routing::get};
+use http::StatusCode;
 use sevria_service_telemetry::telemetry_middleware;
 use tokio::net::TcpListener;
 
@@ -8,7 +9,8 @@ async fn main() -> Result<()> {
     let telemetry = sevria_service_telemetry::init("basic-http")?;
     let router = Router::new()
         .route("/", get(hello))
-        .route("/foo", get(foo))
+        .route("/say-hello/{name}", get(say_hello))
+        .route("/oops", get(oops))
         .layer(middleware::from_fn_with_state(
             telemetry,
             telemetry_middleware,
@@ -27,6 +29,13 @@ async fn hello() -> &'static str {
     "Hello, world!"
 }
 
-async fn foo() -> &'static str {
-    "bar"
+async fn say_hello(Path(name): Path<String>) -> String {
+    format!("Hello, {}!", name)
+}
+
+async fn oops() -> impl IntoResponse {
+    (
+        StatusCode::INTERNAL_SERVER_ERROR,
+        "Oops! Something went wrong.",
+    )
 }
